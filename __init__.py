@@ -59,7 +59,7 @@ def initialize(self):
         self.navigation_active = False
         
     def home(self, message):
-        self.city = self.settings.get('homecity', "ottawa")
+        self.city = self.settings.get('homecity', "canada")
         self.street = self.settings.get('homestreet', "Bayshore")
         self.street_number = self.settings.get('homenumber', "1")
         self.navigation_active = True
@@ -78,13 +78,13 @@ def initialize(self):
             self.speak_dialog('no.route')
 
      def where_is_this(self, message):
-        city = "münchen"
-        street = "baumgasse"
+        city = "ottawa"
+        street = "woodridge"
         self.speak_dialog("where.is.this", data={"city": city, "street": street,})
         
         
     def where_was_this(self, message):
-        target = "münchen baumgasse"
+        target = "ottawa woodridge"
         self.speak_dialog("where.was.this", data={"target": target})
         
         
