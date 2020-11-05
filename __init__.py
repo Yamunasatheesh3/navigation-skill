@@ -23,8 +23,8 @@ class NavigationSkill(MycroftSkill):
         start='https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial'
         endpoint = start
         api_key = 'AIzaSyBp25k9LqhGDh4nAIHeFnhu045jrWPnWkg'
-        origins = input('where are you?: ')
-        destinations = input('where do you want to go?: ').replace(' ','+')
+        origins = message.data.get("where are you?")
+        destinations = message.data.get("where do you want to go?").replace(' ','+')
         
         nav_request = 'endpoint={}&origins={}&destinations={}&key={}'.format(endpoint,origins,destinations,api_key)
         
