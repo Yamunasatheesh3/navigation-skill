@@ -1,8 +1,0 @@
-{
-  "utterance": "where are you",
-  "intent_type": "NavigationIntent",
-  "intent": {
-    "NavigationKeyword": "where are you"
-  }
-}
-
