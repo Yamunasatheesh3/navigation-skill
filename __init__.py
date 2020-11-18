@@ -126,19 +126,19 @@ class NavigationSkill(MycroftSkill):
             spoken_depart_time = message.data.get("Depart")
         except KeyError:
             spoken_depart_time = 'now'
-        itinerary_dict = {
+        route_dict = {
             'origin': origin_addr,
             'destination': dest_addr,
             }
-        LOGGER.debug("Itinerary:: %s" % itinerary_dict)
-        return itinerary_dict
+        LOGGER.debug("Route:: %s" % build_route_dict)
+        return build_route_dict
     
     def request_drive_time(self, message, depart_time):
-        itinerary = self.build_itinerary(message)
+        route = self.build_route(message)
         self.speak_dialog("welcome")
         duration_arg = {
-            'origin': itinerary['origin'],
-            'destination': itinerary['destination'],
+            'origin': route['origin'],
+            'destination': route['destination'],
             'mode': 'driving',
             'units': self.dist_units
             }
@@ -163,10 +163,10 @@ class NavigationSkill(MycroftSkill):
                               data={'trip_time': duration_norm})
         
    def request_drive_time_orig(self, message, depart_time, api_key):
-        itinerary = self.build_itinerary(message)
+        route = self.build_route(message)
         self.speak_dialog("welcome")
-        orig_enc = self.__convert_address(itinerary['origin'])
-        dest_enc = self.__convert_address(itinerary['destination'])
+        orig_enc = self.__convert_address(route['origin'])
+        dest_enc = self.__convert_address(route['destination'])
         api_root = 'https://maps.googleapis.com/maps/api/directions/json'
         api_params = '?origin=' + orig_enc +\
                      '&destination=' + dest_enc +\
@@ -206,6 +206,40 @@ class NavigationSkill(MycroftSkill):
 
         else:
             LOGGER.error(response.json())   
+               
+    def request_distance(self, message):
+        route = self.build_route(message)
+        self.speak_dialog("welcome")
+        dist_arg = {
+            'origins': route['origin'],
+            'destinations': route['destination'],
+            'mode': 'driving',
+            'units': self.dist_units
+            }
+        drive_details = self.maps.distance(**dist_args)
+        duration_norm = drive_details[0]
+        duration_transit = drive_details[1]
+        transit_time = drive_details[2]
+        if transit_time >= 20:
+            LOGGER.debug("Duration = Heavy")
+            self.speak_dialog('distance.heavy',
+                              data={'destination': route['dest_name'],
+                                    'trip_time': duration_norm,
+                                    'transit_time': transit_time,
+                                    'origin': route['origin']})
+        elif transit_time >= 5:
+            LOGGER.debug("Duration = Delay")
+            self.speak_dialog('distance.delay',
+                              data={'destination': route['dest_name'],
+                                    'trip_time': duration_norm,
+                                    'transit_time': transit_time,
+                                    'origin': route['origin']})
+        else:
+            LOGGER.debug("Duration = Clear")
+            self.speak_dialog('distance.clear',
+                              data={'destination': route['dest_name'],
+                                    'trip_time': duration_norm,
+                                    'origin': route['origin']})
                 
     def __convert_address(self, address):
         address_converted = sub(' ', '+', address)
