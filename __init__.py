@@ -71,7 +71,7 @@ class NavigationSkill(MycroftSkill):
             .require("Destination").optionally("Origin").build()
         self.register_intent(intent, self.handle_transit_now_intent)
 
-    def __build_traffic_later_intent(self):
+    def __build_transit_later_intent(self):
         intent = IntentBuilder("TransitLaterIntent").require("TransitKeyword")\
             .require("Destination").optionally("Origin").build()
         self.register_intent(intent, self.handle_transit_later_intent)
