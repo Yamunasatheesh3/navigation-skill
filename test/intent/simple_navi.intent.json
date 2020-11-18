@@ -1,0 +1,7 @@
+{
+  "utterance": "what is my travel time",
+  "intent_type": "TransitNowIntent",
+  "intent": {
+    "NavigationKeyword": "drive"
+  }
+}
