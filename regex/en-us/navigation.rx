@@ -1,0 +1,2 @@
+(duration|travel) to (?P<destination>.*) (?:from)? (?P<origin>.*)
+from (?P<origin>.*) to (?P<destination>.*)
