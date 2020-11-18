@@ -1,7 +1,0 @@
-{
-  "utterance": "where do you want to go",
-  "intent_type": "NavigationIntent",
-  "intent": {
-    "NavigationKeyword": "where do you want to go"
-  }
-}
