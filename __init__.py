@@ -104,8 +104,8 @@ class NavigationSkill(MycroftSkill):
             LOGGER.error("Error: {0}".format(err))
             
     def build_route(self, message):
-        spoken_dest = self.get_response("whereDoYouWantToGo")
-        spkn_origin = self.get_response("whereAreYou")
+        spoken_dest = self.get_response("FromLocation")
+        spkn_origin = self.get_response("ToLocation")
         if spkn_origin is None:
             self.log.debug("No origin")
         if spoken_dest is None:
