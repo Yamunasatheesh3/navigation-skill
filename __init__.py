@@ -1,7 +1,7 @@
 import urllib.request
 import json
 import requests
-import googlemaps
+from googleapiclient import googlemaps
 from os.path import dirname, join
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
@@ -46,20 +46,16 @@ class GoogleMapsClient(object):
 class NavigationSkill(MycroftSkill):
     def __init__(self):
         super(NavigationSkill, self).__init__(name="NavigationSkill")
-        provider = self.config.get('provider', 'google')
+        provider = self.settings.get('provider', 'google')
         LOGGER.debug("Configured Provider: %s" % provider)
-        self.dist_units = self.config.get("system_unit")
-        if self.dist_units == 'english':
-            self.dist_units = 'imperial'
         if provider == 'google':
-            api_key = self.config.get('api_key', None)
+            api_key = self.settings.get('api_key', None)
             self.maps = GoogleMapsClient(api_key)
             LOGGER.debug("Connected to Google API: %s" % self.maps)
         
         
     def initialize(self):
         self.load_data_files(dirname(__file__))
-        self.language = self.config_core.get('lang')
         self.load_vocab_files(join(dirname(__file__), 'vocab', self.lang))
         self.load_regex_files(join(dirname(__file__), 'regex', self.lang))
         self.__build_transit_now_intent()
@@ -216,7 +212,7 @@ class NavigationSkill(MycroftSkill):
             'mode': 'driving',
             'units': self.dist_units
             }
-        drive_details = self.maps.distance(**dist_args)
+        drive_details = self.maps.distance(**dist_arg)
         duration_norm = drive_details[0]
         duration_transit = drive_details[1]
         transit_time = drive_details[2]
