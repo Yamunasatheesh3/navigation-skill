@@ -1,0 +1,24 @@
+{
+    "name": "Navigation Skill",
+    "skillMetadata": {
+        "sections": [
+            {
+              "default": 
+                {
+                  "destination": {
+                     "work": "75 Laurier Ave, Ottawa, K1N6N5"
+                   
+                   },
+                   
+                  "origin": {
+                     "home": 136 Woodridge Crescent, Ottawa, K2B7S9"
+                     
+                   }
+                   
+                }
+                
+             }
+             
+           ]
+       }
+}    
