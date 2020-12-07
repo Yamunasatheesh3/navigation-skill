@@ -168,6 +168,7 @@ class NavigationSkill(MycroftSkill):
                      '&destination=' + dest_enc +\
                      '&departure_time=' + depart_time +\
                      '&traffic_model=best_guess' +\
+                     '&waypoint=True' +\ 
                      '&key=' + api_key
         api_url = api_root + api_params
         LOGGER.debug("API Request: %s" % api_url)
@@ -182,6 +183,7 @@ class NavigationSkill(MycroftSkill):
             LOGGER.debug("API Response: %s" % response)
             routes = response.json()['routes'][0]
             legs = routes['legs'][0]
+            midpoint = response.routes[0](legs['waypoint']/2)
             duration_norm = int(legs['duration']['value']/60)
             duration_transit = int(legs['duration_in_transit']['value']/60)
             transit_time = duration_transit - duration_norm
@@ -222,20 +224,23 @@ class NavigationSkill(MycroftSkill):
                               data={'destination': route['dest_name'],
                                     'trip_time': duration_norm,
                                     'transit_time': transit_time,
-                                    'origin': route['origin']})
+                                    'origin': route['origin'],
+                                    'midpoint': route['midpoint']})
         elif transit_time >= 5:
             LOGGER.debug("Duration = Delay")
             self.speak_dialog('distance.delay',
                               data={'destination': route['dest_name'],
                                     'trip_time': duration_norm,
                                     'transit_time': transit_time,
-                                    'origin': route['origin']})
+                                    'origin': route['origin'],
+                                    'midpoint': route['midpoint']})
         else:
             LOGGER.debug("Duration = Clear")
             self.speak_dialog('distance.clear',
                               data={'destination': route['dest_name'],
                                     'trip_time': duration_norm,
-                                    'origin': route['origin']})
+                                    'origin': route['origin'],
+                                    'midpoint': route['midpoint']})
                 
     def __convert_address(self, address):
         address_converted = sub(' ', '+', address)
