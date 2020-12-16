@@ -15,9 +15,9 @@ class GoogleMapsClient(object):
         self.gmaps = googlemaps.Client(key=api_key)
         LOGGER.debug("Connected to Google API: %s" % self.gmaps)
 
-     def duration(self, **duration_arg):
-        LOGGER.debug('Google API - Duration')
-        response = self.gmaps.directions(**duration_arg)[0]
+     def traffic(self, **traffic_arg):
+        LOGGER.debug('Google API - Traffic')
+        response = self.gmaps.directions(**traffic_arg)[0]
         LOGGER.debug("API Response: %s" % json.dumps(response))
         legs = response['legs'][0]
         duration_norm = int(legs['duration']['value']/60)
@@ -138,23 +138,23 @@ class NavigationSkill(MycroftSkill):
             'mode': 'driving',
             'units': self.dist_units
             }
-        drive_details = self.maps.duration(**duration_arg)
+        drive_details = self.maps.duration(**traffic_arg)
         duration_norm = drive_details[0]
         duration_transit = drive_details[1]
         transit_time = drive_details[2]
         route_summ = drive_details[3]
         if transit_time >= 20:
-            LOGGER.debug("Duration = Heavy")
-            self.speak_dialog('duration.heavy',
+            LOGGER.debug("Traffic = Heavy")
+            self.speak_dialog('traffic.heavy',
                               data={'trip_time': duration_norm,
                                     'transit_time': transit_time})
         elif transit_time >= 5:
-            LOGGER.debug("Duration = Delay")
+            LOGGER.debug("Traffic = Delay")
             self.speak_dialog('duration.delay',
                               data={'trip_time': duration_norm,
                                     'transit_time': transit_time})
         else:
-            LOGGER.debug("Duration = Clear")
+            LOGGER.debug("Traffic = Clear")
             self.speak_dialog('duration.clear',
                               data={'trip_time': duration_norm})
         
@@ -188,18 +188,18 @@ class NavigationSkill(MycroftSkill):
             duration_transit = int(legs['duration_in_transit']['value']/60)
             transit_time = duration_transit - duration_norm
             if transit_time >= 20:
-                LOGGER.debug("Duration = Heavy")
-                self.speak_dialog('duration.heavy',
+                LOGGER.debug("Traffic = Heavy")
+                self.speak_dialog('traffic.heavy',
                                   data={'trip_time': duration_norm,
-                                        'traffic_time': traffic_time})
+                                        'transit_time': transit_time})
             elif traffic_time >= 5:
-                LOGGER.debug("Duration = Delay")
-                self.speak_dialog('duration.delay',
+                LOGGER.debug("Traffic = Delay")
+                self.speak_dialog('traffic.delay',
                                   data={'trip_time': duration_norm,
-                                        'traffic_time': traffic_time})
+                                        'transit_time': transit_time})
             else:
-                LOGGER.debug("Duration = Clear")
-                self.speak_dialog('duration.clear',
+                LOGGER.debug("Traffic = Clear")
+                self.speak_dialog('traffic.clear',
                                   data={'trip_time': duration_norm})
 
         else:
@@ -219,24 +219,24 @@ class NavigationSkill(MycroftSkill):
         duration_transit = drive_details[1]
         transit_time = drive_details[2]
         if transit_time >= 20:
-            LOGGER.debug("Duration = Heavy")
-            self.speak_dialog('distance.heavy',
+            LOGGER.debug("Traffic = Heavy")
+            self.speak_dialog('traffic.heavy',
                               data={'destination': route['dest_name'],
                                     'trip_time': duration_norm,
                                     'transit_time': transit_time,
                                     'origin': route['origin'],
                                     'midpoint': route['midpoint']})
         elif transit_time >= 5:
-            LOGGER.debug("Duration = Delay")
-            self.speak_dialog('distance.delay',
+            LOGGER.debug("Traffic = Delay")
+            self.speak_dialog('traffic.delay',
                               data={'destination': route['dest_name'],
                                     'trip_time': duration_norm,
                                     'transit_time': transit_time,
                                     'origin': route['origin'],
                                     'midpoint': route['midpoint']})
         else:
-            LOGGER.debug("Duration = Clear")
-            self.speak_dialog('distance.clear',
+            LOGGER.debug("Traffic = Clear")
+            self.speak_dialog('traffic.clear',
                               data={'destination': route['dest_name'],
                                     'trip_time': duration_norm,
                                     'origin': route['origin'],
